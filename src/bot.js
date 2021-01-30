@@ -46,12 +46,16 @@ client.on('message', (message) => {
         })
         .catch((err) => {
           message.channel.send(
-            "My palms are sweaty, knees weak, arms are heavy. There is an API error on his sweater already, mom's spaghetti"
+            "My palms are sweaty, knees weak, arms are heavy. There is an API error on his sweater already, mom's spaghetti."
           );
         });
     } else if (CMD_NAME === 'roll') {
       // ! ROLL
-      message.channel.send(getRandomInt(7));
+      const count = parseInt(args[0]);
+      args.shift();
+      shuffle(args);
+
+      message.channel.send(`Retarded Winners are: ${args.slice(0, count).join(', ')}`);
     }
   }
 });
@@ -80,4 +84,24 @@ function nFormatter(num, digits) {
     }
   }
   return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
+}
+
+function shuffle(array) {
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
