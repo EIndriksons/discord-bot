@@ -13,10 +13,10 @@ client.on('message', (message) => {
 
     // Command Switch
     if (CMD_NAME === 'help') {
-      // HELP
+      // ! HELP
       message.channel.send('Apēd skrūves dauni!');
     } else if (CMD_NAME === 'stock') {
-      // STOCK {SYMBOL}
+      // ! STOCK {SYMBOL}
       const url = `https://financialmodelingprep.com/api/v3/quote/${args[0]}`;
       axios
         .get(url, { params: { apikey: process.env.FINANCIAL_MODELLING_API } })
@@ -45,10 +45,12 @@ client.on('message', (message) => {
           message.channel.send(embed);
         })
         .catch((err) => {
-          message.channel.send('Ah shit, the API is down');
+          message.channel.send(
+            "My palms are sweaty, knees weak, arms are heavy. There is an API error on his sweater already, mom's spaghetti"
+          );
         });
     } else if (CMD_NAME === 'roll') {
-      // ROLL
+      // ! ROLL
       message.channel.send(getRandomInt(7));
     }
   }
