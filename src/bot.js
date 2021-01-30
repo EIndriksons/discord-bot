@@ -27,7 +27,7 @@ client.on('message', (message) => {
             .setTitle(`${finData.symbol}, ${finData.name} 🚀`)
             .setDescription(
               `
-            **Price:** \`${(Math.round(finData.price * 100) / 100).toFixed(2)} $\`\n
+            **Price:** \`${(Math.round(finData.price * 100) / 100).toFixed(2)} 💲\`\n
             **Open:** \`${(Math.round(finData.open * 100) / 100).toFixed(2)} $\`
             **Close:** \`${(Math.round(finData.previousClose * 100) / 100).toFixed(2)} $\`\n
             **Low:** \`${(Math.round(finData.dayLow * 100) / 100).toFixed(2)} $\`
@@ -39,7 +39,8 @@ client.on('message', (message) => {
             **EPS:** \`${finData.eps} $\`
             **P/E:** \`${finData.pe ? finData.pe : '-'} $\`
             `
-            );
+            )
+            .setFooter('Remember - Stocks only go UP! :new_moon:');
 
           message.channel.send(embed);
         })
