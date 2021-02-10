@@ -97,6 +97,12 @@ function message(message) {
 
 function messageReactionAdd(reaction, user) {
   const member = reaction.message.guild.members.cache.get(user.id);
+  if (
+    reaction.message.id === config.roleGameMessageId ||
+    reaction.message.id === config.roleSocialMessageId
+  ) {
+    member.roles.add(config.roles['bunga']);
+  }
   if (reaction.message.id === config.roleGameMessageId) {
     switch (reaction.emoji.name) {
       case '👳🏿':
