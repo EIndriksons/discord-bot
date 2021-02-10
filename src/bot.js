@@ -1,13 +1,36 @@
 require('dotenv').config();
 const axios = require('axios');
-const { Client, MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed, GuildChannelManager } = require('discord.js');
 const { nFormatter, shuffle } = require('./helpers');
 
-const client = new Client({ partials: ['MESSAGE'] });
+const client = new Client({ partials: ['MESSAGE', 'REACTION'] });
 const PREFIX = '!';
 
+const config = {
+  roleChannel: 'roles',
+  roleMessageId: null,
+};
+
+client.on('ready', onReady);
 client.on('message', message);
+
 client.login(process.env.DISCORDJS_BOT_TOKEN);
+
+async function onReady() {
+  // filter and find role channel
+  const roleChannel = client.channels.cache.find((channel) => channel.name === config.roleChannel);
+
+  // fetch channel messages
+  try {
+    await roleChannel.messages.fetch();
+  } catch (err) {
+    console.error('Error fetching channel messages', err);
+  }
+
+  console.log(roleChannel);
+  config.roleMessageId = roleChannel.messages.cache.first().id;
+  console.log(config.roleMessageId);
+}
 
 function message(message) {
   if (message.author.bot) return;
@@ -60,6 +83,26 @@ function message(message) {
       shuffle(args);
 
       message.channel.send(`Retarded Winners are: ${args.slice(0, count).join(', ')}`);
+    } else if (CMD_NAME === 'setup') {
+      // ! SETUP
+      if (args[0] === 'role') {
+        message.channel
+          .send(
+            `**SeLeCt yOuR GaMeR rOlE:**\n:person_wearing_turban::skin-tone-5: - Counter-Strike: Global Offensive\n:chicken: - PlayerUnknown's Battlegrounds\n:crab: - League of Legends\n:gun: - Valorant\n:pirate_flag: - Sea of Thieves\n:earth_africa: - Minecraft\n:robot: - Factorio\n:hammer_pick: - Rust\n:monkey: - Apex`
+          )
+          .then((res) => {
+            res.react('👳🏿');
+            res.react('🐔');
+            res.react('🦀');
+            res.react('🔫');
+            res.react('🏴‍☠️');
+            res.react('🌍');
+            res.react('🤖');
+            res.react('⚒️');
+            res.react('🐒');
+          });
+        message.delete();
+      }
     }
   }
 }
