@@ -1,16 +1,15 @@
 require('dotenv').config();
-const fs = require('fs');
 const axios = require('axios');
+const config = require('./config.json');
 const { Client, MessageEmbed, GuildChannelManager } = require('discord.js');
 const { nFormatter, shuffle } = require('./helpers');
-
-const config = JSON.parse(fs.readFileSync('./src/config.json', 'utf8'));
 
 const client = new Client({ partials: ['MESSAGE', 'REACTION'] });
 const PREFIX = '!';
 
 client.on('message', message);
-client.on('messageReactionAdd', messageReaction);
+client.on('messageReactionAdd', messageReactionAdd);
+client.on('messageReactionRemove', messageReactionRemove);
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
 
@@ -82,49 +81,102 @@ function message(message) {
             res.react('⚒️');
             res.react('🐒');
           });
+        message.channel
+          .send(
+            `**Select your Social  :monkey:  Group:**\n:money_with_wings: - Finance r/wallstreetbets Retard Club (aka Lost money on $GME)\n:red_car: - Car Enthusiasts (aka BMW club)`
+          )
+          .then((res) => {
+            res.react('💸');
+            res.react('🚗');
+          });
         message.delete();
       }
     }
   }
 }
 
-function messageReaction(reaction, user) {
-  if (!config.roleMessageId) {
-    console.error('config.roleMessageId not set');
-  }
-
-  console.log(config.roleMessageId);
-  console.log(reaction.message.id);
-
+function messageReactionAdd(reaction, user) {
   const member = reaction.message.guild.members.cache.get(user.id);
-  if (reaction.message.id === config.roleMessageId) {
+  if (reaction.message.id === config.roleGameMessageId) {
     switch (reaction.emoji.name) {
       case '👳🏿':
-        member.roles.add('794658306786459659');
+        member.roles.add(config.roles['csgo']);
         break;
       case '🐔':
-        console.log('hello');
-        member.roles.add('800676968836235284');
+        member.roles.add(config.roles['pubg']);
         break;
       case '🦀':
-        member.roles.add('809023142419759139');
+        member.roles.add(config.roles['league']);
         break;
       case '🔫':
-        member.roles.add('809023056092725288');
+        member.roles.add(config.roles['valorant']);
         break;
       case '🏴‍☠️':
-        member.roles.add('808371378759532544');
+        member.roles.add(config.roles['pirates']);
         break;
       case '🌍':
-        member.roles.add('809023323505426432');
+        member.roles.add(config.roles['minecraft']);
         break;
       case '⚒️':
-        member.roles.add('795670132302675970');
+        member.roles.add(config.roles['rust']);
         break;
       case '🐒':
-        member.roles.add('809023472151822338');
+        member.roles.add(config.roles['apex']);
         break;
       default:
+        reaction.remove();
+    }
+  } else if (reaction.message.id === config.roleSocialMessageId) {
+    switch (reaction.emoji.name) {
+      case '💸':
+        member.roles.add(config.roles['stonks']);
+        break;
+      case '🚗':
+        member.roles.add(config.roles['car']);
+        break;
+      default:
+        reaction.remove();
+    }
+  }
+}
+
+function messageReactionRemove(reaction, user) {
+  const member = reaction.message.guild.members.cache.get(user.id);
+  if (reaction.message.id === config.roleGameMessageId) {
+    switch (reaction.emoji.name) {
+      case '👳🏿':
+        member.roles.remove(config.roles['csgo']);
+        break;
+      case '🐔':
+        member.roles.remove(config.roles['pubg']);
+        break;
+      case '🦀':
+        member.roles.remove(config.roles['league']);
+        break;
+      case '🔫':
+        member.roles.remove(config.roles['valorant']);
+        break;
+      case '🏴‍☠️':
+        member.roles.remove(config.roles['pirates']);
+        break;
+      case '🌍':
+        member.roles.remove(config.roles['minecraft']);
+        break;
+      case '⚒️':
+        member.roles.remove(config.roles['rust']);
+        break;
+      case '🐒':
+        member.roles.remove(config.roles['apex']);
+        break;
+    }
+  } else if (reaction.message.id === config.roleSocialMessageId) {
+    switch (reaction.emoji.name) {
+      case '💸':
+        member.roles.remove(config.roles['stonks']);
+        break;
+      case '🚗':
+        member.roles.remove(config.roles['car']);
+        break;
     }
   }
 }
