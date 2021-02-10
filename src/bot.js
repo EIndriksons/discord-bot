@@ -1,36 +1,18 @@
 require('dotenv').config();
+const fs = require('fs');
 const axios = require('axios');
 const { Client, MessageEmbed, GuildChannelManager } = require('discord.js');
 const { nFormatter, shuffle } = require('./helpers');
 
+const config = JSON.parse(fs.readFileSync('./src/config.json', 'utf8'));
+
 const client = new Client({ partials: ['MESSAGE', 'REACTION'] });
 const PREFIX = '!';
 
-const config = {
-  roleChannel: 'roles',
-  roleMessageId: null,
-};
-
-client.on('ready', onReady);
 client.on('message', message);
+client.on('messageReactionAdd', messageReaction);
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
-
-async function onReady() {
-  // filter and find role channel
-  const roleChannel = client.channels.cache.find((channel) => channel.name === config.roleChannel);
-
-  // fetch channel messages
-  try {
-    await roleChannel.messages.fetch();
-  } catch (err) {
-    console.error('Error fetching channel messages', err);
-  }
-
-  console.log(roleChannel);
-  config.roleMessageId = roleChannel.messages.cache.first().id;
-  console.log(config.roleMessageId);
-}
 
 function message(message) {
   if (message.author.bot) return;
@@ -85,10 +67,10 @@ function message(message) {
       message.channel.send(`Retarded Winners are: ${args.slice(0, count).join(', ')}`);
     } else if (CMD_NAME === 'setup') {
       // ! SETUP
-      if (args[0] === 'role') {
+      if (args[0] === 'roles') {
         message.channel
           .send(
-            `**SeLeCt yOuR GaMeR rOlE:**\n:person_wearing_turban::skin-tone-5: - Counter-Strike: Global Offensive\n:chicken: - PlayerUnknown's Battlegrounds\n:crab: - League of Legends\n:gun: - Valorant\n:pirate_flag: - Sea of Thieves\n:earth_africa: - Minecraft\n:robot: - Factorio\n:hammer_pick: - Rust\n:monkey: - Apex`
+            `**SeLeCt yOuR GaMeR rOlE:**\n:person_wearing_turban::skin-tone-5: - Counter-Strike: Global Offensive\n:chicken: - PlayerUnknown's Battlegrounds\n:crab: - League of Legends\n:gun: - Valorant\n:pirate_flag: - Sea of Thieves\n:earth_africa: - Minecraft\n:hammer_pick: - Rust\n:monkey: - Apex`
           )
           .then((res) => {
             res.react('👳🏿');
@@ -97,12 +79,52 @@ function message(message) {
             res.react('🔫');
             res.react('🏴‍☠️');
             res.react('🌍');
-            res.react('🤖');
             res.react('⚒️');
             res.react('🐒');
           });
         message.delete();
       }
+    }
+  }
+}
+
+function messageReaction(reaction, user) {
+  if (!config.roleMessageId) {
+    console.error('config.roleMessageId not set');
+  }
+
+  console.log(config.roleMessageId);
+  console.log(reaction.message.id);
+
+  const member = reaction.message.guild.members.cache.get(user.id);
+  if (reaction.message.id === config.roleMessageId) {
+    switch (reaction.emoji.name) {
+      case '👳🏿':
+        member.roles.add('794658306786459659');
+        break;
+      case '🐔':
+        console.log('hello');
+        member.roles.add('800676968836235284');
+        break;
+      case '🦀':
+        member.roles.add('809023142419759139');
+        break;
+      case '🔫':
+        member.roles.add('809023056092725288');
+        break;
+      case '🏴‍☠️':
+        member.roles.add('808371378759532544');
+        break;
+      case '🌍':
+        member.roles.add('809023323505426432');
+        break;
+      case '⚒️':
+        member.roles.add('795670132302675970');
+        break;
+      case '🐒':
+        member.roles.add('809023472151822338');
+        break;
+      default:
     }
   }
 }
