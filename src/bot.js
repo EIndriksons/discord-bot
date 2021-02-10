@@ -131,6 +131,7 @@ function messageReactionAdd(reaction, user) {
         break;
       default:
         reaction.remove();
+        break;
     }
   } else if (reaction.message.id === config.roleSocialMessageId) {
     switch (reaction.emoji.name) {
@@ -142,6 +143,7 @@ function messageReactionAdd(reaction, user) {
         break;
       default:
         reaction.remove();
+        break;
     }
   }
 }
