@@ -1,4 +1,3 @@
-require('dotenv').config();
 const axios = require('axios');
 const config = require('./config.json');
 const { Client, MessageEmbed, GuildChannelManager } = require('discord.js');
