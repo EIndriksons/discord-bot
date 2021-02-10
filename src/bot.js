@@ -1,13 +1,15 @@
 require('dotenv').config();
 const axios = require('axios');
 const { Client, MessageEmbed } = require('discord.js');
-
 const { nFormatter, shuffle } = require('./helpers');
 
 const client = new Client({ partials: ['MESSAGE'] });
 const PREFIX = '!';
 
-client.on('message', (message) => {
+client.on('message', message);
+client.login(process.env.DISCORDJS_BOT_TOKEN);
+
+function message(message) {
   if (message.author.bot) return;
   if (message.content.startsWith(PREFIX)) {
     // Message parser function
@@ -60,6 +62,4 @@ client.on('message', (message) => {
       message.channel.send(`Retarded Winners are: ${args.slice(0, count).join(', ')}`);
     }
   }
-});
-
-client.login(process.env.DISCORDJS_BOT_TOKEN);
+}
