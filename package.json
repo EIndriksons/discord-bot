@@ -1,5 +1,8 @@
 {
   "name": "discord-bot",
+  "engines": {
+    "node": "16.13.1"
+  },
   "version": "1.0.0",
   "description": "",
   "main": "bot.js",
