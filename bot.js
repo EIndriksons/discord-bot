@@ -1,5 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
+const cron = require('cron');
+const { checkAlexRank } = require('./helpers');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { Client, Intents, Collection } = require('discord.js');
@@ -39,6 +41,12 @@ client.once('ready', () => {
       if (err) console.error(err);
     }
   })();
+
+  // checking Alex rank in League of Legends every hour
+  let scheduleCheckAlexRank = new cron.CronJob('0 0 */1 * * *', () => {
+    checkAlexRank(client.guilds.get(process.env.DISCORDJS_BOT_GUILD_ID));
+  });
+  scheduleCheckAlexRank.start();
 });
 
 // handling interactions (commands)
