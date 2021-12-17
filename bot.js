@@ -1,4 +1,3 @@
-require('dotenv').config();
 const fs = require('fs');
 const cron = require('cron');
 const { checkAlexRank } = require('./helpers');
