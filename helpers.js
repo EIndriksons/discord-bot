@@ -1,7 +1,8 @@
 const axios = require('axios');
 const config = require('./config.json');
+require('dotenv').config();
 
-function checkAlexRank(guild) {
+function checkAlexRank(guild, client) {
   const url = `https://eun1.api.riotgames.com/tft/league/v1/entries/by-summoner/${config.SummonerID}`;
   axios
     .get(url, { headers: { 'X-Riot-Token': process.env.LOL_API } })
@@ -37,13 +38,37 @@ function checkAlexRank(guild) {
         roleColor = [29, 2, 0];
       }
 
-      guild.roles
-        .edit(config.roleID, {
+      Promise.all([
+        guild.roles.fetch(config.roleID),
+        guild.roles.edit(config.roleID, {
           name: roleName,
           color: roleColor
         })
+      ])
         .then((res) => {
           console.log('Role successfully set.');
+
+          if (res[0].name !== mapName['CHALLENGER'] && roleName === mapName['CHALLENGER']) {
+            client.users.fetch(config['users']['alex']).then((user) => {
+              guild.client.channels.cache.get(config['channels']['main']).send({
+                embeds: [
+                  {
+                    title: 'Spaghetti le Pasta! 🍝',
+                    description: `${user} is CHALLANGED! All hail the gamer King. 👑`,
+                    image: {
+                      url: 'attachment://challanged.png'
+                    }
+                  }
+                ],
+                files: [
+                  {
+                    attachment: './assets/challanged.png',
+                    name: 'challanged.png'
+                  }
+                ]
+              });
+            });
+          }
         })
         .catch((err) => {
           console.log('Role setting failed.');

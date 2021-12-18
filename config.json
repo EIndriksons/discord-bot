@@ -1,4 +1,11 @@
 {
-  "SummonerID": "JsMsvdcmaYd-JeweUzkQcgWnd6zXsV8zzVeqGyKZO5jYqQ4",
-  "roleID": "913525046557945906"
+  "SummonerID": "N0S3lrUfmLnGr4c41zFpX7pE7Fz85zerbbgNSw2t9PsuILo",
+  "roleID": "913525046557945906",
+  "channels": {
+    "main": "540556515367583756",
+    "admin": "809365846861545502"
+  },
+  "users": {
+    "alex": "266961308484763658"
+  }
 }
