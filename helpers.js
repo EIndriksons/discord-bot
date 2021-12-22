@@ -38,41 +38,47 @@ function checkAlexRank(guild, client) {
         roleColor = [29, 2, 0];
       }
 
-      Promise.all([
-        guild.roles.fetch(config.roleID),
-        guild.roles.edit(config.roleID, {
-          name: roleName,
-          color: roleColor
-        })
-      ])
-        .then((res) => {
-          console.log('Role successfully set.');
+      (async () => {
+        const role = await guild.roles.fetch(config.roleID);
 
-          if (res[0].name !== mapName['CHALLENGER'] && roleName === mapName['CHALLENGER']) {
-            client.users.fetch(config['users']['alex']).then((user) => {
-              guild.client.channels.cache.get(config['channels']['main']).send({
-                embeds: [
-                  {
-                    title: 'Spaghetti le Pasta! 🍝',
-                    description: `${user} is CHALLANGED! All hail the gamer King. 👑`,
-                    image: {
-                      url: 'attachment://challanged.png'
-                    }
+        // if alex gets promoted from grand master to challenger
+        if (role.name !== mapName['CHALLENGER'] && roleName === mapName['CHALLENGER']) {
+          console.log('Alex got into challenger. Sending message...');
+          client.users.fetch(config['users']['alex']).then((user) => {
+            guild.client.channels.cache.get(config['channels']['admin']).send({
+              embeds: [
+                {
+                  title: 'Spaghetti le Pasta! 🍝',
+                  description: `${user} is CHALLANGED! All hail the gamer King. 👑`,
+                  image: {
+                    url: 'attachment://challanged.png'
                   }
-                ],
-                files: [
-                  {
-                    attachment: './assets/challanged.png',
-                    name: 'challanged.png'
-                  }
-                ]
-              });
+                }
+              ],
+              files: [
+                {
+                  attachment: './assets/challanged.png',
+                  name: 'challanged.png'
+                }
+              ]
             });
-          }
-        })
-        .catch((err) => {
-          console.log('Role setting failed.');
-        });
+          });
+        }
+
+        // if alex gets demoted from challenger
+        if (role.name === mapName['CHALLENGER'] && roleName !== mapName['CHALLENGER']) {
+          console.log('Alex no longer in challenger. Sending message...');
+        }
+
+        guild.roles
+          .edit(config.roleID, { name: roleName, color: roleColor })
+          .then((res) => {
+            console.log('Role successfully set.');
+          })
+          .catch((err) => {
+            console.log('Role setting failed.');
+          });
+      })();
     })
     .catch((err) => {
       console.log(err);
