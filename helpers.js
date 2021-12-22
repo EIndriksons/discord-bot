@@ -51,14 +51,14 @@ function checkAlexRank(guild, client) {
                   title: 'Spaghetti le Pasta! 🍝',
                   description: `${user} is CHALLANGED! All hail the gamer King. 👑`,
                   image: {
-                    url: 'attachment://challanged.png'
+                    url: 'attachment://challanged.jpg'
                   }
                 }
               ],
               files: [
                 {
-                  attachment: './assets/challanged.png',
-                  name: 'challanged.png'
+                  attachment: './assets/challanged.jpg',
+                  name: 'challanged.jpg'
                 }
               ]
             });
@@ -68,6 +68,25 @@ function checkAlexRank(guild, client) {
         // if alex gets demoted from challenger
         if (role.name === mapName['CHALLENGER'] && roleName !== mapName['CHALLENGER']) {
           console.log('Alex no longer in challenger. Sending message...');
+          client.users.fetch(config['users']['alex']).then((user) => {
+            guild.client.channels.cache.get(config['channels']['main']).send({
+              embeds: [
+                {
+                  title: 'Alex went to Therapy',
+                  description: `Congratulations! ${user} has been cured from League of Legends and is no longer challanged!`,
+                  image: {
+                    url: 'attachment://therapy.jpg'
+                  }
+                }
+              ],
+              files: [
+                {
+                  attachment: './assets/therapy.jpg',
+                  name: 'therapy.jpg'
+                }
+              ]
+            });
+          });
         }
 
         guild.roles
