@@ -42,13 +42,11 @@ client.once('ready', () => {
     }
   })();
 
-  checkAlexRank(client.guilds.cache.get(process.env.DISCORDJS_BOT_GUILD_ID), client);
-
   // checking Alex rank in League of Legends every hour
-  // let scheduleCheckAlexRank = new cron.CronJob('*/30 * * * *', () => {
-  //   checkAlexRank(client.guilds.cache.get(process.env.DISCORDJS_BOT_GUILD_ID), client);
-  // });
-  // scheduleCheckAlexRank.start();
+  let scheduleCheckAlexRank = new cron.CronJob('*/30 * * * *', () => {
+    checkAlexRank(client.guilds.cache.get(process.env.DISCORDJS_BOT_GUILD_ID), client);
+  });
+  scheduleCheckAlexRank.start();
 });
 
 // handling interactions (commands)

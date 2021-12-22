@@ -45,7 +45,7 @@ function checkAlexRank(guild, client) {
         if (role.name !== mapName['CHALLENGER'] && roleName === mapName['CHALLENGER']) {
           console.log('Alex got into challenger. Sending message...');
           client.users.fetch(config['users']['alex']).then((user) => {
-            guild.client.channels.cache.get(config['channels']['admin']).send({
+            guild.client.channels.cache.get(config['channels']['main']).send({
               embeds: [
                 {
                   title: 'Spaghetti le Pasta! 🍝',
