@@ -44,6 +44,9 @@ function checkAlexRank(guild, client) {
         // if alex gets promoted from grand master to challenger
         if (role.name !== mapName['CHALLENGER'] && roleName === mapName['CHALLENGER']) {
           console.log('Alex got into challenger. Sending message...');
+          guild.client.channels.cache
+            .get(config['channels']['logs'])
+            .send(`${data.summonerName} got into challanger. Sending message to main...`);
           client.users.fetch(config['users']['alex']).then((user) => {
             guild.client.channels.cache.get(config['channels']['main']).send({
               embeds: [
@@ -68,6 +71,9 @@ function checkAlexRank(guild, client) {
         // if alex gets demoted from challenger
         if (role.name === mapName['CHALLENGER'] && roleName !== mapName['CHALLENGER']) {
           console.log('Alex no longer in challenger. Sending message...');
+          guild.client.channels.cache
+            .get(config['channels']['logs'])
+            .send(`${data.summonerName} no longer in challenger. Sending message to main...`);
           client.users.fetch(config['users']['alex']).then((user) => {
             guild.client.channels.cache.get(config['channels']['main']).send({
               embeds: [
@@ -92,10 +98,16 @@ function checkAlexRank(guild, client) {
         guild.roles
           .edit(config.roleID, { name: roleName, color: roleColor })
           .then((res) => {
-            console.log('Role successfully set.');
+            console.log(`Role for ${data.summonerName} successfully updated.`);
+            guild.client.channels.cache
+              .get(config['channels']['logs'])
+              .send(`Role for ${data.summonerName} successfully updated.`);
           })
           .catch((err) => {
-            console.log('Role setting failed.');
+            console.log(`Role update for ${data.summonerName} failed.`);
+            guild.client.channels.cache
+              .get(config['channels']['logs'])
+              .send(`Role update for ${data.summonerName} failed.`);
           });
       })();
     })
